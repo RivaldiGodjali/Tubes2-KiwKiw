@@ -1,0 +1,26 @@
+{
+  "name": "tubes-manpro",
+  "version": "1.0.0",
+  "description": "Tugas Besar ManPro",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "us",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mysql": "^2.18.1",
+    "nodemon": "^3.0.1",
+    "path": "^0.12.7",
+    "url": "^0.11.3"
+  },
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "sweetalert2": "^11.10.1"
+  }
+}
