@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/homestyle.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <a class="logo" href="/"><img src="/logo.png" alt="" style="width: 150px;"></a>
+        <a href="/adddata">ADD DATA</a>
+        <a href="/filterdata">FILTER DATA</a>
+        <div class="dropdown">
+            <a href="#">CHART</a>
+            <div class="dropdown-content">
+                <a href="/barchart">Bar Chart</a>
+                <a href="/scatterplot">Scatter Plot</a>
+            </div>
+        </div>
+    </div>
+
+  <div id="content">
+    <h2>Masukkan Data dalam bentuk CSV</h2>
+    <input type="file" id="csvFile" name="csvFile" accept=".csv">
+  </div>
+
+</body>
+</html>
