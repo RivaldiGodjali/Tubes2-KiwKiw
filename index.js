@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
@@ -21,12 +22,6 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-
-app.use(session({
-    secret: 'password',
-    resave: false,
-    saveUninitialized: true
-}));
 
 let storage = multer.diskStorage({
     destination:(req, res, callback) => {
@@ -94,7 +89,6 @@ function uploadCSV (path) {
                 console.log(error)
             } else {
                 let query = "INSERT INTO Customer (ID, Year_Birth, Education,Marital_Status, Income, Kidhome, Teenhome, Dt_Customer, Recency,  MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds, NumDealsPurchases, NumWebPurchases, NumCatalogPurchases, NumStorePurchases,NumWebVisitsMonth, AcceptedCmp3, AcceptedCmp4, AcceptedCmp5,AcceptedCmp1, AcceptedCmp2, Complain, Z_CostContact, Z_Revenue, Response) VALUES ?"
-                console.log(query);
                 connection.query(query, [CSVDataColl], (error, res) => {
                     if (error) {
                         console.log(error);
@@ -265,6 +259,6 @@ app.get('/scatterplot', (req, res) => {
     res.render('ScatterPlot');
 });
 
-app.listen(65000, () => {
+app.listen(8080, () => {
     console.log('Server running on port 65000');
 });
