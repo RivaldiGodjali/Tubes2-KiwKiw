@@ -1,11 +1,13 @@
-import express, { query } from 'express';
+import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
-import mysql from 'mysql';
+import mysql from 'mysql2';
 import bodyParser from 'body-parser';
-import session from 'express-session';
-import Swal from 'sweetalert2';
+import multer from 'multer';
+import csv from 'fast-csv';
+import fs from 'fs'
+import moment from 'moment';
 
 const app = express();
 
@@ -26,12 +28,25 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '',
-//     database: 'tubes_rpl',
-// });
+const pool = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'tubes_manpro',
+});
+
+let storage = multer.diskStorage({
+    destination:(req, res, callback) => {
+        callback(null,"./data/")
+    },
+    filename:(req, file, callback)=>{
+        callback(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname))
+    }
+})
+
+let uploads = multer({
+    storage: storage
+})
 
 app.set('view engine', 'ejs');
 
@@ -42,6 +57,57 @@ app.get('/', (req, res) => {
 app.get('/adddata', (req, res) => {
     res.render('AddData');
 });
+
+app.post ('/upload', uploads.single('csvFile'), (req, res) => {
+    console.log(req.file.path)
+    uploadCSV(__dirname + "/data/" + req.file.filename)
+    res.send("awikwok")
+});
+
+function uploadCSV (path) {
+    let stream = fs.createReadStream(path)
+    let CSVDataColl = []
+    let fileStream = csv
+    .parse({ delimiter: ';' })
+    .on('data', function(data){
+        if (data[4] === null || data[4] === '') {
+            data[4] = 0;
+        } else {
+            data[4] = parseFloat(data[4]);
+        }
+
+        const parsedDate = moment(data[7], 'DD/MM/YYYY', true);
+
+        if (parsedDate.isValid()) {
+            data[7] = parsedDate.format('YYYY-MM-DD');
+            CSVDataColl.push(data);
+        } else {
+            console.error(`Invalid date: ${data[7]}`);
+        }
+    })
+    .on('end', function(){
+        console.log("CSV Parsing completed");
+        CSVDataColl.shift()
+
+        pool.getConnection((error, connection) => {
+            if (error) {
+                console.log(error)
+            } else {
+                let query = "INSERT INTO Customer (ID, Year_Birth, Education,Marital_Status, Income, Kidhome, Teenhome, Dt_Customer, Recency,  MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds, NumDealsPurchases, NumWebPurchases, NumCatalogPurchases, NumStorePurchases,NumWebVisitsMonth, AcceptedCmp3, AcceptedCmp4, AcceptedCmp5,AcceptedCmp1, AcceptedCmp2, Complain, Z_CostContact, Z_Revenue, Response) VALUES ?"
+                connection.query(query, [CSVDataColl], (error, res) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log("Inserted rows: " + res.affectedRows);
+                    }
+                    connection.release();
+                })
+            }
+        })
+        fs.unlinkSync(path)
+    })
+    stream.pipe(fileStream)
+}
 
 app.get('/filterdata', (req, res) => {
     res.render('FilterData');
