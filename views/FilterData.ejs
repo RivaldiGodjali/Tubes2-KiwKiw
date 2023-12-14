@@ -21,6 +21,119 @@
     <div id="content">
     <h2>Pilih Filter yang anda inginkan</h2>
     <p>Filter your data</p>
+  
+
+    <div id="filter_container">
+        <div id="avg">
+            <select id="filter_avg" name="avg_sum">
+                <option value="avg">Average</option>
+                <option value="count">Count</option>
+            </select>
+        </div>
+        <div id="filter_1">
+            <select id="filter_hitung" name="nummnt">
+                <option value="Income">Income</option>
+                <option value="Recency">Recency</option>
+                <option value="MntWines">MntWines</option>
+                <option value="MntFruits">MntFruits</option>
+                <option value="MntMeatProducts">MntMeatProducts</option>
+                <option value="MntFishProducts">MntFishProducts</option>
+                <option value="MntSweetProducts">MntSweetProducts</option>
+                <option value="MntGoldProds">MntGoldProds</option>
+                <option value="NumDealsPurchases">NumDealsPurchases</option>
+                <option value="NumWebPurchases">NumWebPurchases</option>
+                <option value="NumCatalogPurchases">NumCatalogPurchases</option>
+                <option value="NumStorePurchases">NumStorePurchases</option>
+                <option value="NumWebVisitsMonth">NumWebVisitsMonth</option>
+            </select>
+        </div>
+        <div id="filter_2">
+            <label for="filter_hitung2">Select a Category:</label>
+            <select id="filter_hitung2" name="nummnt" onchange="showSubOptions()">
+                <option value="-">-</option>
+                <option value="Education">Education</option>
+                <option value="Marital_Status">Marital Status</option>
+            </select>
+
+            <div id="subOptionsContainer" style="margin-top: 10px; display: none;">
+                <label for="subOptions">Select a Sub-Category:</label>
+                <select id="subOptions" name="subOptions">
+                    <option value="">-</option>
+                    <option value="Graduation">Graduation</option>
+                    <option value="PhD">PhD</option>
+                    <option value="Master">Master</option>
+                    <option value="2nCycle">2n Cycle</option>
+                    <option value="Basic">Basic</option>
+                </select>
+            </div>
+
+            <div id="subOptionsContainer2" style="margin-top: 10px; display: none;">
+                <label for="subOptions2">Select a Sub-Category:</label>
+                <select id="subOptions2" name="subOptions2">
+                    <option value="">-</option>
+                    <option value="Married ">Married</option>
+                    <option value="Single">Single</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Together">Together</option>
+                    <option value="YOLO">YOLO</option>
+                    <option value="Widow">Widow</option>
+                    <option value="Absurd">Absurd</option>
+                    <option value="Alone">Alone</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <button class="button" onclick="handleFilter()">Submit</button>
+    <div id="result"></div>
+    <script>
+        function showSubOptions() {
+        var mainDropdown = document.getElementById("filter_hitung2");
+        var subOptionsContainers = {
+            Education: document.getElementById("subOptionsContainer"),
+            Marital_Status: document.getElementById("subOptionsContainer2")
+        };
+
+        Object.values(subOptionsContainers).forEach(container => {
+            container.style.display = "none";
+        });
+
+        var selectedContainer = subOptionsContainers[mainDropdown.value];
+        if (selectedContainer) {
+            selectedContainer.style.display = "block";
+        }
+    }
+
+    function handleFilter() {
+      const firstFilter = document.getElementById('filter_avg').value;
+      const filterType = document.getElementById('filter_hitung').value;
+      const filterValue = document.getElementById('filter_hitung').value;
+      const subFilterType = document.getElementById('filter_hitung2').value;
+      const subFilterValue = document.getElementById('subOptions').value;
+
+      const requestData = {
+        filterType,
+        filterValue,
+        subFilterType,
+        subFilterValue,
+      };
+
+      fetch('/filter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        document.getElementById('result').innerText = JSON.stringify(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+    </script>
 
 </body>
 </html>
