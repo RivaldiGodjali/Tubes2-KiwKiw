@@ -70,10 +70,23 @@ body {
   background-color: black;
 }
 
+h2{
+  font-size: 50px;
+}
+
 .container{
   display: flex;
   flex-direction: column;
   width: 1000px;
   height: auto;
+}
+
+.desc{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 1500px;
+  height: auto;
+  font-size: 40px;
 }
 
