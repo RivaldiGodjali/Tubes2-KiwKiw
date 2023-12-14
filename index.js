@@ -259,6 +259,6 @@ app.get('/scatterplot', (req, res) => {
     res.render('ScatterPlot');
 });
 
-app.listen(8080, () => {
+app.listen(3500, () => {
     console.log('Server running on port 65000');
 });
