@@ -1,5 +1,5 @@
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f8f9fa;
@@ -71,14 +71,16 @@ body {
 }
 
 h2{
-  font-size: 50px;
+  font-size: 60px;
 }
 
 .container{
   display: flex;
-  flex-direction: column;
-  width: 1000px;
-  height: auto;
+  justify-content: center; 
+  align-items: center;
+  text-align: center;
+  border-radius: 0px 0px 15px 15px;
+  height: 500px;
 }
 
 .desc{
@@ -88,5 +90,42 @@ h2{
   width: 1500px;
   height: auto;
   font-size: 40px;
+  margin-top: 150px;
 }
 
+.kotak1, .kotak2, .kotak3, .kotak4 {
+  width: 400px;
+  height: 450px; 
+  background-color: aliceblue;
+  border-radius: 20px;
+  margin-right: 40px;
+  margin-left: 10px;
+  background-color: rgba(3, 104, 107, 0.959); 
+}
+
+.judul1, .judul2, .judul3, .judul4 {
+  margin-top: 30px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  color: white;
+}
+
+.judul1_txt, .judul2_txt, .judul3_txt, .judul4_txt {
+  margin: 20px;
+  padding-top: 30px;
+  font-style: normal;
+  font-weight: 350;
+  font-size: 20 px;
+  line-height: 25px;
+  text-align: center;
+  color: white;
+}
+
+.yuhuu {
+  width: 100px; 
+  height: 100px;
+  margin-top: 20px;
+}
