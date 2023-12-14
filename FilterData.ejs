@@ -94,12 +94,10 @@
             Marital_Status: document.getElementById("subOptionsContainer2")
         };
 
-        // Hide all sub-options containers
         Object.values(subOptionsContainers).forEach(container => {
             container.style.display = "none";
         });
 
-        // Show the selected sub-options container
         var selectedContainer = subOptionsContainers[mainDropdown.value];
         if (selectedContainer) {
             selectedContainer.style.display = "block";
@@ -107,14 +105,12 @@
     }
 
     function handleFilter() {
-      // Get selected filter criteria from your HTML elements
       const firstFilter = document.getElementById('filter_avg').value;
       const filterType = document.getElementById('filter_hitung').value;
       const filterValue = document.getElementById('filter_hitung').value;
       const subFilterType = document.getElementById('filter_hitung2').value;
       const subFilterValue = document.getElementById('subOptions').value;
 
-      // Prepare data to be sent in the POST request
       const requestData = {
         filterType,
         filterValue,
@@ -122,7 +118,6 @@
         subFilterValue,
       };
 
-      // Send an HTTP POST request to your server's /filter endpoint
       fetch('/filter', {
         method: 'POST',
         headers: {
@@ -132,10 +127,7 @@
       })
       .then(response => response.json())
       .then(data => {
-        // Handle the response data
         console.log(data);
-        // Update your HTML to display the filtered data
-        // For example, update a div with the id "result" with the filtered data
         document.getElementById('result').innerText = JSON.stringify(data);
       })
       .catch(error => {
