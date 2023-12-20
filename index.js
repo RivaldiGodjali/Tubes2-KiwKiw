@@ -109,9 +109,14 @@ app.get('/filterdata', (req, res) => {
 });
 
 app.post('/filter', (req, res) => {
-    const { firstFilter, filterType, filterValue, subFilterType, subFilterValue } = req.body;
+    const { firstFilter, filterType, filterValue } = req.body;
+    console.log(firstFilter, filterType, filterValue)
 
-    let filterAvgSum, filterColumn, subFilterColumn;
+    let filterAvgSum, filterColumn, groupByColumn;
+
+    const AVG = 'AVG';
+    const COUNT = 'COUNT';
+    const SUM = 'SUM';
 
     switch (firstFilter) {
         case 'avg':
@@ -119,6 +124,9 @@ app.post('/filter', (req, res) => {
             break;
         case 'count':
             filterAvgSum = COUNT;
+            break;
+        case 'sum':
+            filterAvgSum = SUM;
             break;
     }
 
@@ -128,6 +136,12 @@ app.post('/filter', (req, res) => {
             break;
         case 'Recency':
             filterColumn = 'Recency';
+            break;
+        case 'TeenHome':
+            filterColumn = 'TeenHome';
+            break;
+        case 'KidHome':
+            filterColumn = 'KidHome';
             break;
         case 'MntWines':
             filterColumn = 'MntWines';
@@ -167,80 +181,18 @@ app.post('/filter', (req, res) => {
             return;
     }
 
-    if (subFilterType === 'Education' || subFilterType === 'Marital_Status') {
-        switch (subFilterType) {
-            case 'Education':
-                subFilterColumn = 'Education';
-                break;
-            case 'Marital_Status':
-                subFilterColumn = 'Marital_Status';
-                break;
-            case 'Marital_Status':
-                subFilterColumn = 'Marital_Status';
-                break;
-            case 'Graduation':
-                subFilterColumn = 'Graduation';
-                break;
-            case 'PhD':
-                subFilterColumn = 'PhD';
-                break;
-            case 'Master':
-                subFilterColumn = 'Master';
-                break;
-            case '2nCycle':
-                subFilterColumn = '2nCycle';
-                break;
-            case 'Basic':
-                subFilterColumn = 'Basic';
-                break;
-            case 'Married':
-                subFilterColumn = 'Married';
-                break;
-            case 'Single':
-                subFilterColumn = 'Single';
-                break;
-            case 'Divorced':
-                subFilterColumn = 'Divorced';
-                break;
-            case 'YOLO':
-                subFilterColumn = 'YOLO';
-                break;
-            case 'Widow':
-                subFilterColumn = 'Widow';
-                break;
-            case 'Absurd':
-                subFilterColumn = 'Absurd';
-                break;
-            case 'Alone':
-                subFilterColumn = 'Alone';
-                break;
-            default:
-                res.status(400).send('Invalid subFilterType');
-                return;
-        }
+    switch (filterValue) {
+        case 'Education':
+            groupByColumn = 'Education';
+            break;
+        case 'Marital_Status':
+            groupByColumn = 'Marital_Status';
+            break;
     }
 
-    let query;
+    const query = `SELECT ${filterAvgSum}(${filterColumn}), ${groupByColumn} FROM customer GROUP BY ${groupByColumn}`
 
-    if(filterAvgSum === 'AVG') {
-        if (subFilterColumn) {
-            query = `SELECT ${subFilterColumn}, ${filterColumn}, AVG(${filterColumn}) as avg FROM Customer WHERE ${subFilterColumn} = ? GROUP BY ${subFilterColumn}, ${filterType}`;
-        } else {
-            query = `SELECT ${filterType}, ${filterColumn}, AVG(${filterColumn}) as avg FROM Customer GROUP BY ${filterType}`;
-        }
-    } else {
-        if (subFilterColumn) {
-            query = `SELECT ${subFilterColumn}, ${filterColumn}, COUNT(${filterType}) as count FROM Customer WHERE ${subFilterColumn} = ? GROUP BY ${subFilterColumn}, ${filterType}`;
-        } else {
-            query = `SELECT ${filterType}, COUNT(${filterType}) as count FROM Customer GROUP BY ${filterType}`;
-        }
-    }
-
-    
-
-    const values = [subFilterValue || filterValue];
-
-    pool.query(query, values, (error, results) => {
+    pool.query(query, (error, results) => {
         if (error) {
             console.error(error);
             res.status(500).send('Internal Server Error');
