@@ -9,6 +9,7 @@ import multer from 'multer';
 import csv from 'fast-csv';
 import fs from 'fs'
 import moment from 'moment';
+import cors from 'cors';
 
 const app = express();
 
@@ -17,7 +18,7 @@ const __dirname = dirname(__filename);
 
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'src')));
-
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -205,6 +206,28 @@ app.post('/filter', (req, res) => {
 
 app.get('/barchart', (req, res) => {
     res.render('BarChart');
+});
+
+app.post('/getChartData', (req, res) => {
+    const dataType = req.body.dataType;
+    console.log(dataType);
+
+    const query = `SELECT ${dataType}, COUNT(*) as value FROM customer GROUP BY ${dataType} ORDER BY ${dataType} ASC;`;
+
+    pool.query(query, (error, results) => {
+        if (error) {
+            console.error('Database query error:', error);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+
+        const responseData = {
+            labels: results.map(row => row[dataType]),
+            values: results.map(row => row.value)
+        };
+
+        res.json(responseData);
+    });
 });
 
 app.get('/scatterplot', (req, res) => {
