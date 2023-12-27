@@ -70,3 +70,30 @@ body {
   #sidebar .dropdown-content a:hover {
     background-color: black;
   }
+
+  .avg, .filter_1, .filter_2 {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .avg_sum, .filter_hitung, .group_by {
+    font-size: x-large;
+  }
+  
+  #filter_avg, #filter_hitung, #group_by {
+    margin-top: 0.5em;
+    height: 2em;
+    width: 20em;
+    padding-left: 1em;
+    font-size: larger;
+    border-radius: 15px;
+    margin-bottom: 1em;
+  }
+  
+  .button {
+    font-size: 25px;
+    width: 6em;
+    height: 3em;
+    border-radius: 20px;
+    margin-bottom: 2em;
+  }
